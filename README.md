@@ -1,3 +1,38 @@
+# prerequisition
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+
+# install nodejs and yarn
+
+```
+sudo apt update
+sudo apt install curl git
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+sudo corepack enable
+```
+
+# install hardnat from git
+```
+#!/bin/bash -xe
+git clone https://github.com/PatrickAlphaC/hardhat-fund-me-fcc
+cd hardhat-fund-me-fcc
+echo yarn
+```
+
+
 # start hardhat with fundme smartcontract 
 
 ```
@@ -242,8 +277,12 @@ ChainId: 31337
 Currency symbol : GO
 ```
 
-# install fundme frontend on my local laptop
-
+# install fundme frontend on your local laptop
+```
+git clone https://github.com/PatrickAlphaC/html-fund-me-fcc
+cd html-fund-me-fcc
+```
+run 
 
 ```
 clientMac:html-fund-me-fcc i$ yarn
