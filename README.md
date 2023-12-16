@@ -1,4 +1,5 @@
 # prerequisition
+``
 sudo apt-get update
 sudo apt-get install ca-certificates curl gnupg
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -14,6 +15,7 @@ sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker
 
+```
 # install nodejs and yarn
 
 ```
