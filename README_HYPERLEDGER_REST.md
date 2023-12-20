@@ -145,6 +145,89 @@ config server-policy policy
   next
 end
 
+## attach fortiweb lua script do dump header and body
+```
+when HTTP_REQUEST {
+    debug("============= Dump HTTP request header =============\n")
+    debug("host: %s, path: %s, url: %s, method: %s, version: %s\n",
+            HTTP:host(), HTTP:path(), HTTP:url(), HTTP:method(), HTTP:version())
+    for k, v in pairs(HTTP:headers()) do
+        for i = 1, #v do
+            debug("HEADER: %s[%d]: %s\n", k, i, v[i])
+        end
+    end
+    for k, v in pairs(HTTP:cookies()) do
+        debug("Cookie: %s = %s\n", k, v)
+    end
+    for k, v in pairs(HTTP:args()) do
+        debug("ARGS: %s = %s\n", k, v)
+    end
+    debug("========== Dump HTTP request header done ===========\n")
+        HTTP:collect()
+}
+when HTTP_RESPONSE {
+    debug("============= Dump HTTP response header =============\n")
+    debug("status code: %s reason: %s\n", HTTP:status())
+    for k, v in pairs(HTTP:headers()) do
+        for i = 1, #v do
+            debug("HEADER: %s[%d]: %s\n", k, i, v[i])
+        end
+    end
+    for k, v in pairs(HTTP:cookies()) do
+        debug("Cookie: %s = %s\n", k, v)
+    end
+    debug("========== Dump HTTP response header done ===========\n")
+        HTTP:collect()
+    
+}
+when HTTP_DATA_REQUEST {
+    local contentLength = tonumber(HTTP:header("Content-Length")[1]) or 0
+    -- Read the entire body
+    local body_str = HTTP:body(0, contentLength)
+        debug("request body = %s\n", body_str)
+}
+
+when HTTP_DATA_RESPONSE {
+
+    local contentLength = tonumber(HTTP:header("Content-Length")[1]) or 0
+    -- Read the entire body
+    local body_str = HTTP:body(0, contentLength)
+      debug("========== Dump HTTP BODY here ===========\n")
+        debug("response body = %s\n", body_str)
+}
+```
+
+## turn on debug on fortiweb
+
+```
+diagnose debug proxy scripting-user 7
+diagnose debug enabl
+
+
+output
+
+06f1461ac53b # 
+06f1461ac53b # [script-user]: ============= Dump HTTP request header =============
+[script-user]: host: hyperledger.vitaomics.com:8546, path: /query, url: /query?channelid=mychannel&chaincodeid=basic&function=ReadAsset&args=Asset123, method: GET, version: HTTP/1.1
+[script-user]: HEADER: User-Agent[1]: curl/7.81.0
+[script-user]: HEADER: Host[1]: hyperledger.vitaomics.com:8546
+[script-user]: HEADER: Accept[1]: */*
+[script-user]: ARGS: function = ReadAsset
+[script-user]: ARGS: chaincodeid = basic
+[script-user]: ARGS: args = Asset123
+[script-user]: ARGS: channelid = mychannel
+[script-user]: ========== Dump HTTP request header done ===========
+[script-user]: ============= Dump HTTP response header =============
+[script-user]: status code: 200 reason: OK
+[script-user]: HEADER: Date[1]: Wed, 20 Dec 2023 06:22:56 GMT
+[script-user]: HEADER: Content-Type[1]: text/plain; charset=utf-8
+[script-user]: HEADER: Content-Length[1]: 91
+[script-user]: HEADER: return_header[1]: HTTP/1.1 200 OK
+[script-user]: ========== Dump HTTP response header done ===========
+[script-user]: ========== Dump HTTP BODY here ===========
+[script-user]: response body = Response: {"AppraisedValue":13005,"Color":"yellow","ID":"Asset123","Owner":"Tom","Size":54}
+
+```
 ```
 ## test
 
