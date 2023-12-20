@@ -144,6 +144,7 @@ config server-policy policy
     set tlog enable
   next
 end
+```
 
 ## attach fortiweb lua script do dump header and body
 ```
@@ -227,7 +228,6 @@ output
 [script-user]: ========== Dump HTTP BODY here ===========
 [script-user]: response body = Response: {"AppraisedValue":13005,"Color":"yellow","ID":"Asset123","Owner":"Tom","Size":54}
 
-```
 ```
 ## test
 
