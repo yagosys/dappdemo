@@ -1,4 +1,17 @@
+# reference 
+https://medium.com/@immortalsaint/setup-hyperledger-fabric-2-5-lts-on-ubuntu-22-04-linux-f60163281f0c 
+# what is this 
+
+this demo will setup a hyperledger network, the default channel name is "mychannel".
+two peer node
+each peer node has one orginzation
+one order node 
+two container for run chaincode
+two container for couch db ( to save transaction state) 
+the default network config is $GOPATH/fabric-samples/test-network/network.config 
+
 # install hyperledger blockchain
+
 
 
 ## install golang 
@@ -14,10 +27,6 @@ sudo mv go /usr/local
 # Create and redirect to the new working directory
 mkdir -p $HOME/go/src/github.com/yagosys
 
-# Setup GOROOT, GOPATH, PATH
-## Open bashrc file. Mostly it's hidden.
-## Add below 3lines at the end of the file. 
-  ## ⚠️ Careful while setting PATH, append, but do not completely erase existing path and set Go paths else the system would not restart after next poweroff/reboot
 echo export GOROOT=/usr/local/go >> ~/.bashrc
 echo export GOPATH=$HOME/go/src/github.com/yagosys >> ~/.bashrc
 echo export PATH=$GOPATH/bin:$GOROOT/bin:$PATH >> ~/.bashrc
@@ -70,13 +79,9 @@ cd $GOPATH
 cd fabric-samples/test-network
 ./network.sh up createChannel -ca -c mychannel -s couchdb
 ./network.sh deployCC -ccn basic -ccp ../asset-transfer-basic/chaincode-go/ -ccl go
-```
-## install apigateway
-
-```
-cd $GOPATH/fabric-samples/asset-transfer-basic/application-gateway-typescript
-npm install
-npm start
+#docker means pull docker image
+#sample, also download sample
+#binary download binary 
 ```
 
 ## start rest gateway
