@@ -1,5 +1,5 @@
-# diagram
-browser(brave) with metmask wallet --frontendapp---internet--fortiweb vip ----hardhatnode 
+# e2e diagram for ethereum network
+browser(brave) with metmask wallet --frontendapp---internet--fortiweb vip ----hardhat json-rpc node
 
 # document
 README_ethereum_json_rpc.md
@@ -12,6 +12,6 @@ curl ----internet---foriweb vip ---restapi of hyperledger--hyperledger fabric
 README_HYPERLEDGER_REST.md
 
 
-# fortiweb using offical docker image, no license required.
+fortiweb using offical docker image, no license required.
 
 
