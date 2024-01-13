@@ -1,0 +1,12 @@
+curl --request POST \
+  --url http://localhost:3000/invoke \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data = \
+  --data channelid=mychannel \
+  --data chaincodeid=basic \
+  --data function=createAsset \
+  --data args=Asset123 \
+  --data args=yellow \
+  --data args=54 \
+  --data args=Tom \
+  --data args=13005
