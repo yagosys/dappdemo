@@ -10,13 +10,23 @@
     <input type="text" id="assetIdInput" placeholder="Enter Asset ID" value="Asset115">
     <button id="queryDemo">Query Demo</button>
     <button id="invokeDemo">Invoke Demo</button>
+
+    <input type="text" id="queryUrl" style="width:100%; margin-top: 10px;" >
+    <button id="submitQuery">Submit Edited Query</button>
+
      <div id="result"></div>
 
     <script>
 
 document.getElementById('queryDemo').addEventListener('click', function() {
             let assetId = document.getElementById('assetIdInput').value;
-            fetch(`http://web3demo.vitaomics.com:3000/query?channelid=mychannel&chaincodeid=basic&function=ReadAsset&args=${encodeURIComponent(assetId)}`) 
+let queryUrl = `http://web3demo.vitaomics.com:3000/query?channelid=mychannel&chaincodeid=basic&function=ReadAsset&args=${encodeURIComponent(assetId)}`;
+document.getElementById('queryUrl').value = queryUrl;
+});
+
+document.getElementById('submitQuery').addEventListener('click', function() {
+let queryUrl = document.getElementById('queryUrl').value;
+fetch(queryUrl)
                 .then(response => response.json())
         .then(data => {
             document.getElementById('result').innerText = 'Query Result: ' + JSON.stringify(data);
