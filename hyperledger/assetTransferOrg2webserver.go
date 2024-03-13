@@ -29,7 +29,8 @@ const (
 	tlsCertPath         = cryptoPath + "/peers/peer0.org2.example.com/tls/ca.crt"
 	peerEndpoint        = "44.202.98.225:9052"
 	gatewayPeer         = "peer0.org2.example.com"
-	letsEncryptCertPath = "./fortiweb1.pem" // Path to the Let's Encrypt root certificate
+	//letsEncryptCertPath = "./fortiweb1.pem" // Path to the Let's Encrypt root certificate
+	letsEncryptCertPath = "./grpcsample.pem" // Path to the Let's Encrypt root certificate
 	chaincodeName       = "basic"
 	channelName         = "mychannel"
 )
