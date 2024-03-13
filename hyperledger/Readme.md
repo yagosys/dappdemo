@@ -22,6 +22,40 @@ grpcsample-key.pem
 
 - uploade your certificate to fortiweb reverseproxy
 
+```bash
+config system certificate local
+  edit "grpcsample"
+    set certificate "-----BEGIN CERTIFICATE-----
+-----END CERTIFICATE-----
+"
+    set private-key "-----BEGIN ENCRYPTED PRIVATE KEY-----
+-----END ENCRYPTED PRIVATE KEY-----
+"
+    set passwd ENC  ...
+  next
+end
+```
+```bash
+FortiWeb (hyperledger9052) # show
+config server-policy policy
+  edit "hyperledger9052"
+    set ssl enable
+    set vserver hyperledger9052
+    set web-protection-profile hyperledge-new
+    set replacemsg Predefined
+    set server-pool hyperledge9051
+    set https-service hyperledger9052
+    set certificate grpcsample <<----------------------------------
+    set tls-v10 disable
+    set tls-v11 disable
+    set ssl-noreg disable
+    config  http-content-routing-list
+    end
+    set http2 enable
+    set tlog enable
+  next
+end
+```
 - use certificate in your grpc client program
 ```bash
 const (
