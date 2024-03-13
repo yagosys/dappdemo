@@ -109,3 +109,9 @@ after have certificate ready. you can use below shell to run assetTransferOrg2we
 
 http://yourip:3000
 http://yourip:8083
+
+- config your fortiweb
+
+
+use fortiwebconfig.sh to create related fortiweb configure.
+
