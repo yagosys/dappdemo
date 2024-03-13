@@ -1,4 +1,25 @@
-to run assertTransfer sample grpc application. you will need a copy of certificate signed by org2 ca.
+- install  golang
+```bash
+0_install_golang.sh
+``` 
+- install docker composer 
+
+```bash
+1_install_docker_composer.sh
+```
+- download hyperledger
+```bash
+2_download_hyperledge.sh
+```
+
+- install and run hyperledger
+```bash
+3_install_and_run_hyperledge.sh
+```
+- prepare hyperledger sample grpc client application 
+
+you need to compile the source code **assetTransferOrg2webserver.go** 
+to run assertTransferOrg2webserver.go sample grpc application. you will need a copy of certificate signed by org2 ca.
 this certicicate will needed by asserttrafnser and also need uploade to fortiweb grpc reverse proxy
 
 - copy org2 ca and key to your local directory
@@ -75,6 +96,7 @@ m"
 
 - start grpc client gateway
 
+after have certificate ready. you can use below shell to run assetTransferOrg2webserver.go 
 ```bash
 4_start_grpcclient_backend.sh
 ```
@@ -83,3 +105,7 @@ m"
 ```bash
 5_start_restapigw.sh
 ```
+- access the web page to use grpc client and rest clinet 
+
+http://yourip:3000
+http://yourip:8083
