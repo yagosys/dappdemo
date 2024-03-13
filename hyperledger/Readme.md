@@ -72,3 +72,14 @@ m"
         channelName         = "mychannel"
 )
 ```
+
+- start grpc client gateway
+
+```bash
+4_start_grpcclient_backend.sh
+```
+- start rest api 
+
+```bash
+5_start_restapigw.sh
+```
