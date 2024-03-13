@@ -1,4 +1,4 @@
-#!/bin/bash -xe 
+#!/bin/bash -x 
 echo kill existing rest-api
   pids=$(pgrep -f "go run main.go")
     for pid in $pids; do
