@@ -1,3 +1,7 @@
+- prepare a ubuntu linux
+tested on aws with ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-20231207 
+default username is ubuntu
+
 - install  golang
 ```bash
 0_install_golang.sh
