@@ -16,7 +16,8 @@ import (
 
 // Initialize the setup for the organization.
 func Initialize(setup OrgSetup) (*OrgSetup, error) {
-	log.Printf("Initializing connection for %s...\n", setup.OrgName)
+	
+	AppendMessageToFile(fmt.Sprintf("%s Initializing connection for %s...\n", time.Now().Format(time.RFC3339), setup.OrgName))
 	clientConnection := setup.newGrpcConnection()
 	id := setup.newIdentity()
 	sign := setup.newSign()
@@ -31,9 +32,12 @@ func Initialize(setup OrgSetup) (*OrgSetup, error) {
 		client.WithCommitStatusTimeout(1*time.Minute),
 	)
 	if err != nil {
+	AppendMessageToFile(fmt.Sprintf("%s panic %s...\n", time.Now().Format(time.RFC3339), err))
 		panic(err)
 	}
 	setup.Gateway = *gateway
+	message:="initialization complete"
+	AppendMessageToFile(fmt.Sprintf("%s %s...\n", time.Now().Format(time.RFC3339), message))
 	log.Println("Initialization complete")
 	return &setup, nil
 }
@@ -42,6 +46,7 @@ func Initialize(setup OrgSetup) (*OrgSetup, error) {
 func (setup OrgSetup) newGrpcConnection() *grpc.ClientConn {
 	certificate, err := loadCertificate(setup.TLSCertPath)
 	if err != nil {
+	AppendMessageToFile(fmt.Sprintf("%s panic %s...\n", time.Now().Format(time.RFC3339), err))
 		panic(err)
 	}
 
@@ -50,10 +55,15 @@ func (setup OrgSetup) newGrpcConnection() *grpc.ClientConn {
 	transportCredentials := credentials.NewClientTLSFromCert(certPool, setup.GatewayPeer)
 
 	connection, err := grpc.Dial(setup.PeerEndpoint, grpc.WithTransportCredentials(transportCredentials))
+	message:=""
 	if err != nil {
+		message="failed to create gRPC connection:"
+	AppendMessageToFile(fmt.Sprintf("%s %s...\n", time.Now().Format(time.RFC3339), message))
 		panic(fmt.Errorf("failed to create gRPC connection: %w", err))
 	}
 
+		message=fmt.Sprintf("connected gRPC %v",connection)
+	AppendMessageToFile(fmt.Sprintf("%s %s...\n", time.Now().Format(time.RFC3339), message))
 	return connection
 }
 
@@ -61,11 +71,13 @@ func (setup OrgSetup) newGrpcConnection() *grpc.ClientConn {
 func (setup OrgSetup) newIdentity() *identity.X509Identity {
 	certificate, err := loadCertificate(setup.CertPath)
 	if err != nil {
+	AppendMessageToFile(fmt.Sprintf("%s panic %s...\n", time.Now().Format(time.RFC3339), err))
 		panic(err)
 	}
 
 	id, err := identity.NewX509Identity(setup.MSPID, certificate)
 	if err != nil {
+	AppendMessageToFile(fmt.Sprintf("%s panic %s...\n", time.Now().Format(time.RFC3339), err))
 		panic(err)
 	}
 
@@ -76,21 +88,25 @@ func (setup OrgSetup) newIdentity() *identity.X509Identity {
 func (setup OrgSetup) newSign() identity.Sign {
 	files, err := ioutil.ReadDir(setup.KeyPath)
 	if err != nil {
+	AppendMessageToFile(fmt.Sprintf("%s failed to read private key directory %s...\n", time.Now().Format(time.RFC3339), err))
 		panic(fmt.Errorf("failed to read private key directory: %w", err))
 	}
 	privateKeyPEM, err := ioutil.ReadFile(path.Join(setup.KeyPath, files[0].Name()))
 
 	if err != nil {
+	AppendMessageToFile(fmt.Sprintf("%s failed to read private key file %s...\n", time.Now().Format(time.RFC3339), err))
 		panic(fmt.Errorf("failed to read private key file: %w", err))
 	}
 
 	privateKey, err := identity.PrivateKeyFromPEM(privateKeyPEM)
 	if err != nil {
+	AppendMessageToFile(fmt.Sprintf("%s panic %s...\n", time.Now().Format(time.RFC3339), err))
 		panic(err)
 	}
 
 	sign, err := identity.NewPrivateKeySign(privateKey)
 	if err != nil {
+	AppendMessageToFile(fmt.Sprintf("%s panic %s...\n", time.Now().Format(time.RFC3339), err))
 		panic(err)
 	}
 
@@ -100,6 +116,7 @@ func (setup OrgSetup) newSign() identity.Sign {
 func loadCertificate(filename string) (*x509.Certificate, error) {
 	certificatePEM, err := ioutil.ReadFile(filename)
 	if err != nil {
+	AppendMessageToFile(fmt.Sprintf("%s failed to read certificate file %s...\n", time.Now().Format(time.RFC3339), err))
 		return nil, fmt.Errorf("failed to read certificate file: %w", err)
 	}
 	return identity.CertificateFromPEM(certificatePEM)

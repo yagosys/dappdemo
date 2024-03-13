@@ -3,6 +3,7 @@ package web
 import (
 	"fmt"
 	"net/http"
+	"time"
 	"encoding/json"
 
 	"github.com/hyperledger/fabric-gateway/pkg/client"
@@ -17,7 +18,8 @@ type InvokeResponse struct {
 }
 
 func (setup *OrgSetup) Invoke(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Received Invoke request")
+	message:=fmt.Sprintf("Received Invoke request")
+	AppendMessageToFile(fmt.Sprintf("%s %s...\n", time.Now().Format(time.RFC3339),message))
 	if err := r.ParseForm(); err != nil {
 		fmt.Fprintf(w, "ParseForm() err: %s", err)
 		return
@@ -26,12 +28,14 @@ func (setup *OrgSetup) Invoke(w http.ResponseWriter, r *http.Request) {
 	channelID := r.FormValue("channelid")
 	function := r.FormValue("function")
 	args := r.Form["args"]
-	fmt.Printf("channel: %s, chaincode: %s, function: %s, args: %s\n", channelID, chainCodeName, function, args)
+	message = fmt.Sprintf("channel: %s, chaincode: %s, function: %s, args: %s\n", channelID, chainCodeName, function, args)
+	AppendMessageToFile(fmt.Sprintf("%s %s...\n", time.Now().Format(time.RFC3339),message))
 	network := setup.Gateway.GetNetwork(channelID)
 	contract := network.GetContract(chainCodeName)
 	txn_proposal, err := contract.NewProposal(function, client.WithArguments(args...))
 	if err != nil {
-		fmt.Printf("Error creating txn proposal: %s", err)
+		message:=fmt.Sprintf("Error creating txn proposal: %s\n", err)
+		AppendMessageToFile(fmt.Sprintf("%s %s...\n", time.Now().Format(time.RFC3339),message))
 		response := InvokeResponse{
 			Error: fmt.Sprintf("Error creating txn proposal: %v", err),
 		}
@@ -41,7 +45,8 @@ func (setup *OrgSetup) Invoke(w http.ResponseWriter, r *http.Request) {
 	}
 	txn_endorsed, err := txn_proposal.Endorse()
 	if err != nil {
-		fmt.Printf("Error endorsing txn: %s", err)
+		message:=fmt.Sprintf("Error endorsing txn: %s\n", err)
+		AppendMessageToFile(fmt.Sprintf("%s %s...\n", time.Now().Format(time.RFC3339),message))
 		response := InvokeResponse{
 			Error: fmt.Sprintf("Error endorsing txn: %v", err),
 		}
@@ -50,7 +55,8 @@ func (setup *OrgSetup) Invoke(w http.ResponseWriter, r *http.Request) {
 	}
 	txn_committed, err := txn_endorsed.Submit()
 	if err != nil {
-		fmt.Printf("Error submitting transaction: %s", err)
+		message:=fmt.Sprintf("Error submitting transaction: %s\n", err)
+		AppendMessageToFile(fmt.Sprintf("%s %s...\n", time.Now().Format(time.RFC3339),message))
 		response := InvokeResponse{
 			Error: fmt.Sprintf("Error submitting transaction: %v", err),
 		}
@@ -58,10 +64,13 @@ func (setup *OrgSetup) Invoke(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Printf("Transaction ID : %s Response: %s", txn_committed.TransactionID(), txn_endorsed.Result())
+	message = fmt.Sprintf("Transaction ID : %s Response: %s\n", txn_committed.TransactionID(), txn_endorsed.Result())
+		AppendMessageToFile(fmt.Sprintf("%s %s...\n", time.Now().Format(time.RFC3339),message))
 
 
        response := InvokeResponse{Result: string("Created")}
         if err := json.NewEncoder(w).Encode(response); err != nil {
+		AppendMessageToFile(fmt.Sprintf("%s Errro encoding response %s...\n", time.Now().Format(time.RFC3339), err))
                 fmt.Printf("Error encoding response: %v\n", err)
         }
 
